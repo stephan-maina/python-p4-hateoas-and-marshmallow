@@ -1,23 +1,16 @@
-#!/usr/bin/env python3
+from app import db
+from models import Newsletter
 
-from faker import Faker
+if __name__ == '__main__':
+    db.create_all()
 
-from app import app
-from models import db, Newsletter
+    # Create and add sample newsletter entries
+    newsletter1 = Newsletter(title='Liverpool News', body='Exciting updates about Liverpool FC.')
+    newsletter2 = Newsletter(title='CR7 Fan Club', body='All the latest news about Cristiano Ronaldo.')
 
-with app.app_context():
+    db.session.add(newsletter1)
+    db.session.add(newsletter2)
     
-    fake = Faker()
-
-    Newsletter.query.delete()
-
-    newsletters = []
-    for i in range(50):
-        newsletter = Newsletter(
-            title = fake.text(max_nb_chars=20),
-            body = fake.paragraph(nb_sentences=5),
-        )
-        newsletters.append(newsletter)
-
-    db.session.add_all(newsletters)
     db.session.commit()
+
+    print("Sample newsletter entries added to the database.")
